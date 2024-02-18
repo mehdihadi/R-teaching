@@ -1942,7 +1942,33 @@ greg2jal0(1922, 08, 12)
 greg2jal(as.Date(c("2022-4-1","2022-4-4","2022-4-6"), format = "%Y-%m-%d"))
 
 
+##################### Jal to greg and calculate diff of two dates
+ Hadijal2Greg<-function (x) {
+  df<-data.frame()
+  for(i in 1:length(x)){
+    #date <- as.Date(x[i], format = "%Y/%m/%d")
+    date <- strsplit(as.character(x[i]), split = "/")[[1]]
+    year <- as.integer(date[1])
+    month <- as.integer(date[2])
+    day <- as.integer(date[3])
+    
+    df[i,1]<-as.Date(paste(jal2greg(year, month, day),collapse="-"))
+    #df[i,1]<-paste(c( year ),collapse="-")
+  }
+  df%>%
+    rename("JalDate"="V1")
+  
+}
 
+
+#df<-Hadijal2Greg(cal.data$BirthDate)
+df<-apply(cal.data,2,Hadijal2Greg) # maximum
+df<- data.frame(df) 
+df<-within(df,Diff<-as.numeric(JalDate.1-JalDate)/365)
+ 
+write.csv(df,"kazem.csv")      
+
+       
 ########### Part 19:
 # --Graphics in R-------------------------------
 
